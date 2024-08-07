@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天気チェック</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #weather {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>天気チェック</h1>
+    <p>都市名を入力してください：</p>
+    <input type="text" id="city" placeholder="東京">
+    <button onclick="getWeather()">天気を取得</button>
+
+    <div id="weather"></div>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('city').value;
+            const weatherDiv = document.getElementById('weather');
+
+            if (!city) {
+                weatherDiv.innerHTML = '都市名を入力してください。';
+                return;
+            }
+
+            const url = `https://wttr.in/${encodeURIComponent(city)}?format=%t+%w`;
+
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+
+                if (!text) {
+                    weatherDiv.innerHTML = '都市が見つかりませんでした。';
+                } else {
+                    weatherDiv.innerHTML = `<h2>${city}の天気</h2><p>${text}</p>`;
+                }
+            } catch (error) {
+                weatherDiv.innerHTML = '天気データの取得にエラーが発生しました。';
+            }
+        }
+    </script>
+</body>
+</html>
